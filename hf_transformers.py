@@ -13,11 +13,19 @@ model.generation_config.top_p = 1.0
 
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B-Instruct")
 
+prompt = "Write an email to Lisa."
+
+input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
+
+for token in input_ids[0]:
+    print(token)
+    print(tokenizer.decode(token))
+
 generator = pipeline(
     "text-generation",
     model=model,
     tokenizer=tokenizer,
-    return_full_text=False, # the prompt will nto be returned but merely the output of the model
+    return_full_text=False, # the prompt will not be returned but merely the output of the model
     max_new_tokens=1024,
     do_sample=False # sampling strategy, with False it will use greedy decoding (the most likely token)
 )
